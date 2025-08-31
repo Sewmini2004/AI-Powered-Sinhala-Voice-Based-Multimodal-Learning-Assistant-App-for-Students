@@ -1,0 +1,43 @@
+import { Stack } from 'expo-router';
+import React, { useState, useEffect } from 'react';
+import { useSegments } from 'expo-router';
+
+// Temporary auth state. Replace this with your actual auth logic.
+const isSignedIn = false; 
+
+export default function RootLayout() {
+  const segments = useSegments();
+  const [isReady, setIsReady] = useState(false);
+
+  // This is where you would check for a token or user session
+  // In a real app, you would load this from AsyncStorage or a similar service
+  useEffect(() => {
+    // Simulate a check
+    setTimeout(() => {
+      setIsReady(true);
+    }, 1000);
+  }, []);
+
+  if (!isReady) {
+    return null; // or a SplashScreen component
+  }
+
+  return (
+    <Stack>
+      {/* If the user is not signed in, show the auth stack */}
+      {!isSignedIn && (
+        <Stack.Screen
+          name="(auth)"
+          options={{ headerShown: false }}
+        />
+      )}
+      {/* If the user is signed in, show the app (tabs) stack */}
+      {isSignedIn && (
+        <Stack.Screen
+          name="(tabs)"
+          options={{ headerShown: false }}
+        />
+      )}
+    </Stack>
+  );
+}
