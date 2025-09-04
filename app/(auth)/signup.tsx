@@ -19,7 +19,7 @@ export default function SignUpScreen() {
 
         try {
             console.log("2. Sending signup request to backend...");
-            const response = await axios.post('http://192.168.181.183:3000/signup', {
+            const response = await axios.post('http://192.168.43.114:3000/signup', {
                 email: email,
                 password: password,
             });
