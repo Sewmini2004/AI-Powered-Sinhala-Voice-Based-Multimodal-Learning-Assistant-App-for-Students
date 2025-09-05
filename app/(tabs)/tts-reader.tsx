@@ -1,15 +1,53 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert, ScrollView } from 'react-native';
-import Tts from 'react-native-tts';
+import { Audio } from 'expo-av';
+import React, { useEffect, useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+
+// Replace with your backend URL
+const BACKEND_URL = 'http://192.168.43.114:3000';
 
 export default function TTSReaderScreen() {
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState('');
+  const [sound, setSound] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Function to read the text aloud
-  const readTextAloud = () => {
+  // Unload sound when the component is unmounted or a new sound is played
+  useEffect(() => {
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, [sound]);
+
+  const readTextAloud = async () => {
     if (text.trim()) {
-      Tts.setDefaultLanguage('en-US');
-      Tts.speak(text); 
+      setIsLoading(true);
+      try {
+        const response = await fetch(`${BACKEND_URL}/tts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text }),
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success' && data.audioUrl) {
+          const { sound: newSound } = await Audio.Sound.createAsync(
+            { uri: data.audioUrl },
+            { shouldPlay: true }
+          );
+          setSound(newSound);
+        } else {
+          Alert.alert('Error', data.message || 'Failed to get audio from the server.');
+        }
+      } catch (error) {
+        console.error('TTS API call failed:', error);
+        Alert.alert('Error', 'Could not connect to the TTS service.');
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       Alert.alert('Error', 'Please enter some text to read aloud!');
     }
@@ -29,8 +67,12 @@ export default function TTSReaderScreen() {
         placeholder="ඔබේ සටහන මෙතනට ටයිප් කරන්න..."
       />
 
-      <TouchableOpacity style={styles.readButton} onPress={readTextAloud}>
-        <Text style={styles.buttonText}>කියවන්න</Text>
+      <TouchableOpacity 
+        style={styles.readButton} 
+        onPress={readTextAloud} 
+        disabled={isLoading}
+      >
+        <Text style={styles.buttonText}>{isLoading ? 'Loading...' : 'කියවන්න'}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
