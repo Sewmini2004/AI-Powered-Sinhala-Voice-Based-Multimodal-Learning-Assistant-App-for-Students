@@ -192,7 +192,7 @@ export default function VoiceCommandScreen() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>🎤 හඬ විධාන</Text>
+            <Text style={styles.title}>🎤 Voice Command</Text>
             <Text style={styles.instructions}>කතා කරන්න. එය පෙළ බවට පරිවර්තනය කරනු ඇත.</Text>
             <View style={styles.buttonContainer}>
                 {isListening ? (

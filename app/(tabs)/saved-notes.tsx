@@ -42,7 +42,7 @@ export default function SavedNotesScreen() {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch notes');
-      }
+      }  
       const data = await response.json();
       setNotes(data.notes);
     } catch (error) {
@@ -94,13 +94,13 @@ export default function SavedNotesScreen() {
   const getNoteColor = (type: string) => {
     switch (type) {
       case 'text_to_speech':
-        return '#e6f0ff';
+        return '#95b5e4ff';
       case 'voice_to_text':
         return '#e6ffe6';
       case 'image_to_text':
-        return '#fff0e6';
+        return '#9ed7a6ff';
       default:
-        return '#f9f9f9';
+        return '#d7c0c0ff';
     }
   };
 
@@ -162,7 +162,7 @@ export default function SavedNotesScreen() {
               </View>
               {selectedNoteId === note.id && (
                 <View style={styles.checkIcon}>
-                  <Ionicons name="checkmark-circle" size={24} color="#4e73df" />
+                  <Ionicons name="checkmark-circle" size={24} color="#37734fff" />
                 </View>
               )}
             </TouchableOpacity>
