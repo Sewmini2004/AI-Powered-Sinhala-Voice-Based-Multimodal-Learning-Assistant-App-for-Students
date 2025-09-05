@@ -1,9 +1,9 @@
-import { Stack } from 'expo-router';
-import React, { useState, useEffect } from 'react';
-import { useSegments } from 'expo-router';
+import { Stack, useSegments } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { AppProvider } from './(tabs)/AppContext';
 
 // Temporary auth state. Replace this with your actual auth logic.
-const isSignedIn = false; 
+const isSignedIn = false;
 
 export default function RootLayout() {
   const segments = useSegments();
@@ -23,21 +23,23 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      {/* If the user is not signed in, show the auth stack */}
-      {!isSignedIn && (
-        <Stack.Screen
-          name="(auth)"
-          options={{ headerShown: false }}
-        />
-      )}
-      {/* If the user is signed in, show the app (tabs) stack */}
-      {isSignedIn && (
-        <Stack.Screen
-          name="(tabs)"
-          options={{ headerShown: false }}
-        />
-      )}
-    </Stack>
+    <AppProvider>
+      <Stack>
+        {/* If the user is not signed in, show the auth stack */}
+        {!isSignedIn && (
+          <Stack.Screen
+            name="(auth)"
+            options={{ headerShown: false }}
+          />
+        )}
+        {/* If the user is signed in, show the app (tabs) stack */}
+        {isSignedIn && (
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerShown: false }}
+          />
+        )}
+      </Stack>
+    </AppProvider>
   );
 }
