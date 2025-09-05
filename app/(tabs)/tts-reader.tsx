@@ -31,14 +31,16 @@ export default function TTSReaderScreen() {
 
     const fetchNotes = async () => {
         try {
-            const response = await fetch(`${BACKEND_URL}/notes/${USER_ID}?type=text_to_speech`);
+         
+            const response = await fetch(`${BACKEND_URL}/notes/${USER_ID}`);
             if (response.ok) {
                 const data = await response.json();
-                setSavedNotes(data.notes);
+                setSavedNotes(data.notes.filter((note: { type: string; }) => note.type === 'text_to_speech'));
             } else {
                 const errorText = await response.text();
                 console.error('Failed to fetch notes:', errorText);
             }
+
         } catch (error) {
             console.error('Network error fetching notes:', error);
             Alert.alert('දෝෂය', 'සටහන් පූරණය කිරීම අසාර්ථකයි. සර්වර් එක ක්‍රියාත්මක දැයි පරීක්ෂා කරන්න.');

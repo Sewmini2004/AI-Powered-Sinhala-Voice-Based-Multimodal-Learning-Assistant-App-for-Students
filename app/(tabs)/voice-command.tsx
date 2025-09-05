@@ -33,11 +33,10 @@ export default function VoiceCommandScreen() {
 
     const fetchNotes = async () => {
         try {
-            // Fetch notes of type 'speech_to_text' only
-            const response = await fetch(`${BACKEND_URL}/notes/${USER_ID}?type=speech_to_text`);
+             const response = await fetch(`${BACKEND_URL}/notes/${USER_ID}`);
             if (response.ok) {
                 const data = await response.json();
-                setSavedNotes(data.notes);
+                setSavedNotes(data.notes.filter((note: { type: string; }) => note.type === 'speech_to_text'));
             } else {
                 const errorText = await response.text();
                 console.error('Failed to fetch notes:', errorText);
