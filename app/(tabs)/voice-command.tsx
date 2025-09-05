@@ -33,8 +33,8 @@ export default function VoiceCommandScreen() {
 
     const fetchNotes = async () => {
         try {
-            console.log(`Fetching notes from: ${BACKEND_URL}/notes/${USER_ID}`);
-            const response = await fetch(`${BACKEND_URL}/notes/${USER_ID}`);
+            // Fetch notes of type 'speech_to_text' only
+            const response = await fetch(`${BACKEND_URL}/notes/${USER_ID}?type=speech_to_text`);
             if (response.ok) {
                 const data = await response.json();
                 setSavedNotes(data.notes);
@@ -129,7 +129,7 @@ export default function VoiceCommandScreen() {
                 const response = await fetch(`${BACKEND_URL}/saveNote`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: USER_ID, note: transcribedText }),
+                    body: JSON.stringify({ userId: USER_ID, note: transcribedText, type: 'speech_to_text' }),
                 });
                 const data = await response.json();
                 if (data.status === 'success') {
